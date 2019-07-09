@@ -53,7 +53,12 @@ public class LPAItr {
                 builder.append(name).append(",").append(n).append("|");
             }
             List<Map.Entry<String,Integer>> list = new ArrayList(map.entrySet());
-            list.sort((o1, o2) -> (o1.getValue() - o2.getValue()));
+            Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
+                @Override
+                public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+                    return o1.getValue() - o2.getValue();
+                }
+            });
             String label = list.get(list.size() - 1).getKey();
             context.write(new Text(key.toString() + "," + label), new Text(builder.toString()));
         }
@@ -68,6 +73,7 @@ public class LPAItr {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
 
+        job.setNumReduceTasks(10);
         job.setInputFormatClass(KeyValueTextInputFormat.class);
         FileInputFormat.addInputPath(job, new Path(argv[0]));
         FileOutputFormat.setOutputPath(job, new Path(argv[1]));

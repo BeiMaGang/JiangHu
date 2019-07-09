@@ -51,6 +51,7 @@ public class InitLabel {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
         job.setReducerClass(InitLabelReducer.class);
+        job.setNumReduceTasks(10);
         job.setInputFormatClass(KeyValueTextInputFormat.class);
         FileInputFormat.addInputPath(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));

@@ -12,13 +12,15 @@ import java.io.IOException;
  * @description:
  */
 public class LPADriver {
-    private int itrTimes = 50;
+    private int itrTimes = 5;
     private String[] paths;
     private String initLabelOutPath = "/initLabel";
     private String itrProcessOutPath = "/LPAitr";
     private String resultLabelOutPath = "/result";
     private LPADriver(String[] paths) {
         this.paths = paths;
+        if(paths.length >= 3)
+            itrTimes = Integer.parseInt(paths[paths.length - 1]);
     }
 
     private void run() throws InterruptedException, IOException, ClassNotFoundException {

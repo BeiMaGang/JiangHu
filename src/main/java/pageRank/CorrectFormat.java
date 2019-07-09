@@ -77,6 +77,7 @@ public class CorrectFormat {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
         job.setMapOutputValueClass(IntWritable.class);
+        job.setNumReduceTasks(10);
 
         for(int i = 0; i < otherArgs.length - 1; ++i) {
             FileInputFormat.addInputPath(job, new Path(otherArgs[i]));

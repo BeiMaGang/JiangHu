@@ -9,6 +9,7 @@ import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.KeyValueTextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 
 import java.io.IOException;
 
@@ -29,10 +30,23 @@ public class LabelRank {
     }
 
     public static class LabelRankReducer extends Reducer<Text, Text, Text, Text>{
+        private MultipleOutputs<Text, Text> outputs;
+
+        @Override
+        protected void setup(Context context) {
+            outputs = new MultipleOutputs<>(context);
+        }
+
+        @Override
+        protected void cleanup(Context context) throws IOException, InterruptedException {
+            outputs.close();
+        }
+
         @Override
         protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
             for(Text text: values){
                 context.write(key, text);
+                outputs.write(key, text, key.toString() + "/part");
             }
         }
     }
@@ -47,6 +61,7 @@ public class LabelRank {
         job.setOutputValueClass(Text.class);
 
         job.setInputFormatClass(KeyValueTextInputFormat.class);
+
         FileInputFormat.addInputPath(job, new Path(argv[0]));
         FileOutputFormat.setOutputPath(job, new Path(argv[1]));
         job.waitForCompletion(true);

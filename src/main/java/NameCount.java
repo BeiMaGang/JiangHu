@@ -27,7 +27,7 @@ public class NameCount {
 
 
             //按空格分割，去除重复元素，放入数组，每个组合计数为1
-            String[] items = line.split(" ");
+            String[] items = line.split("\t");
             Set<String> set = new HashSet<>(Arrays.asList(items));
             String[] arr = new String[set.size()];
 
@@ -75,6 +75,8 @@ public class NameCount {
         job.setReducerClass(IntSumReducer.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
+
+        job.setNumReduceTasks(10);
 
         FileInputFormat.addInputPath(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
