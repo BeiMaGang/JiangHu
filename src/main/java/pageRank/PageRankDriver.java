@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class PageRankDriver {
 
-    private static final int TIMES = 3; // 迭代次数
+    private static int TIMES = 3; // 迭代次数
     private static String inputPath;
     private static String outputFormatDir = "/PRcorrectFormat";
     private static String outputRankDir = "/PRranking";
@@ -18,14 +18,15 @@ public class PageRankDriver {
     public static void main(String[] args)
             throws IOException, ClassNotFoundException, InterruptedException {
 
-        if (args.length != 2) {
+        if (args.length < 2) {
             System.err.println("Usage:Merge and duplicate removal <in> <out>");
             System.exit(2);
         }
         inputPath = args[0];
         outputResultDir = args[1];
-        outputFormatDir = "output" + outputFormatDir;
-        outputRankDir = "output" + outputRankDir;
+        PageRankDriver.TIMES = Integer.parseInt(args[2]);
+        outputFormatDir = outputResultDir + outputFormatDir;
+        outputRankDir = outputResultDir + outputRankDir;
         try {
             FileUtils.deleteDirectory(new File(args[1]));
         } catch (IOException e) {
