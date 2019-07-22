@@ -7,7 +7,7 @@
 
 ## jar包执行
 
-将JiangHu-1.0-SNAPSHOT.jar和JiangHu-1.0-SNAPSHOT-jar-with-dependencies.jar与下列脚本放到同一目录下
+将**JiangHu-1.0-SNAPSHOT.jar**和**JiangHu-1.0-SNAPSHOT-jar-with-dependencies.jar**与下列脚本放到同一目录下
 
 ```bash
 sh task1.sh #运行任务一
@@ -20,3 +20,11 @@ sh getGraph.sh #将hdfs上的任务三和五的结果放到本地
 sh format.sh #将本地的结果标准化成Gephi所需要的标准格式
 ```
 
+## 项目结构说明
+
+- src/ 为源代码书写处
+- JiangHu/ 是脚本存放处
+- report/ 报告latex书写
+- graph1.pdf 和 graph2.pdf 为 Gephi生成的具体分类图
+- graph.gephi 为 项目gephi具体文件，里面有详细的数据及社区聚类。
+- report.pdf 为实验报告
