@@ -1,4 +1,4 @@
-package pageRank;
+package PR;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
@@ -12,6 +12,7 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.partition.HashPartitioner;
 import org.apache.hadoop.util.GenericOptionsParser;
+import org.mortbay.log.Log;
 
 import java.io.File;
 import java.io.IOException;
@@ -80,7 +81,7 @@ public class PageRanking {
                            Context context)
                 throws IOException, InterruptedException {
 
-//            Log.info("key is " + key.toString());
+            Log.info("key is " + key.toString());
 
 
             if (key.toString().contains("+")) {      // leaderName+pr
@@ -92,7 +93,7 @@ public class PageRanking {
                 cur.set(leaderName);        // 初始化 cur
             }
             if (!cur.toString().equals(leaderName)) {   // 发现人名变化，调用cleanup写入信息
-//                Log.info("notequal" + cur + "  " + leaderName);
+                Log.info("notequal" + cur + "  " + leaderName);
                 cleanup(context);
                 cur.set(leaderName);    // 更新cur的值
             }
@@ -104,7 +105,7 @@ public class PageRanking {
                 for(int i = 0;i < repeatNum;i++) {     // 可能出现多次相同的key( name+pr )
                     valuePR += Double.valueOf(key.toString().split("\\+")[1]);
                 }
-//                Log.info("REPEAT" + Integer.toString(repeatNum));
+                Log.info("REPEAT" + Integer.toString(repeatNum));
             } else {
                 linkList = key.toString();
             }
@@ -134,15 +135,14 @@ public class PageRanking {
             System.exit(2);
         }
 
-        Job job = Job.getInstance(conf, "pageRank.PageRanking");
+        Job job = Job.getInstance(conf, "PageRanking");
         job.setJarByClass(PageRanking.class);
-        job.setMapperClass(PageRankMap.class);
-        job.setReducerClass(PageRankReduce.class);
-        job.setPartitionerClass(NewPartitioner.class);
+        job.setMapperClass(PageRanking.PageRankMap.class);
+        job.setReducerClass(PageRanking.PageRankReduce.class);
+        job.setPartitionerClass(PageRanking.NewPartitioner.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
         job.setMapOutputValueClass(IntWritable.class);
-        job.setNumReduceTasks(10);
 
         for(int i = 0; i < otherArgs.length - 1; ++i) {
             FileInputFormat.addInputPath(job, new Path(otherArgs[i]));
